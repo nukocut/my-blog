@@ -1,0 +1,28 @@
+---
+import { SITE } from '../config';
+import { withBase } from '../utils';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p style="margin: 0">
+      © {year} {SITE.author} · 用
+      <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>
+      构建
+    </p>
+    <div class="footer-links">
+      {
+        SITE.socials.map((s) => (
+          <a
+            href={s.href.startsWith('/') ? withBase(s.href) : s.href}
+            target={s.href.startsWith('http') ? '_blank' : undefined}
+            rel={s.href.startsWith('http') ? 'noopener' : undefined}
+          >
+            {s.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</footer>

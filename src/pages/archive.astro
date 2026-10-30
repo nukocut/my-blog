@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatDate, withBase } from '../utils';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// 按年份分组
+const years = new Map<number, typeof posts>();
+for (const post of posts) {
+  const year = post.data.pubDate.getFullYear();
+  if (!years.has(year)) years.set(year, []);
+  years.get(year)!.push(post);
+}
+const sortedYears = [...years.entries()].sort((a, b) => b[0] - a[0]);
+---
+
+<BaseLayout title="归档" description="按时间排列的全部文章">
+  <section class="page">
+    <div class="container container--narrow">
+      <h1>归档</h1>
+      <p class="article__desc" style="margin-bottom: 2.5rem">
+        {posts.length} 篇文章，{sortedYears.length} 个年份。
+      </p>
+
+      {
+        sortedYears.map(([year, list]) => (
+          <div style="margin-bottom: 2.5rem">
+            <h2 class="section__title" style="margin-bottom: 0.75rem">
+              {year}
+              <span style="font-weight: 400; font-size: 0.8rem; color: var(--text-faint); margin-left: 0.35rem">
+                {list.length} 篇
+              </span>
+            </h2>
+            <ul class="post-list">
+              {list.map((post) => (
+                <li>
+                  <a class="post-item" href={withBase(`/blog/${post.id}/`)}>
+                    <div class="post-item__meta">
+                      <time datetime={post.data.pubDate.toISOString()}>
+                        {formatDate(post.data.pubDate)}
+                      </time>
+                    </div>
+                    <h3 class="post-item__title" style="font-size: 1.05rem">{post.data.title}</h3>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

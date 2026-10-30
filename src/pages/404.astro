@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../utils';
+---
+
+<BaseLayout title="页面不存在" noindex>
+  <section class="page">
+    <div class="container container--narrow">
+      <div class="empty">
+        <span class="empty__code">404</span>
+        <p>这个页面好像从来没有存在过。</p>
+        <p style="display: flex; gap: 1.25rem; justify-content: center; margin-top: 1.5rem">
+          <a href={withBase('/')} style="color: var(--accent)">回到首页</a>
+          <a href={withBase('/blog')} style="color: var(--accent)">看看文章</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

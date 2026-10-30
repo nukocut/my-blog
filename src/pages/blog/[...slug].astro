@@ -1,0 +1,98 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate, readingTime, withBase } from '../../utils';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
+
+  return posts.map((post, index) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      prev: posts[index + 1] ?? null, // 更早的一篇
+      next: posts[index - 1] ?? null, // 更新的一篇
+    },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  prev: CollectionEntry<'blog'> | null;
+  next: CollectionEntry<'blog'> | null;
+}
+
+const { post, prev, next } = Astro.props;
+const { Content } = await render(post);
+const { title, description, pubDate, updatedDate, tags } = post.data;
+const minutes = readingTime(post.body);
+---
+
+<BaseLayout title={title} description={description || title} type="article">
+  <article class="article">
+    <div class="container container--narrow">
+      <header class="article__header">
+        <div class="article__meta">
+          <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+          <span class="dot" aria-hidden="true"></span>
+          <span>{minutes} 分钟阅读</span>
+          {
+            updatedDate && (
+              <>
+                <span class="dot" aria-hidden="true"></span>
+                <span>更新于 {formatDate(updatedDate)}</span>
+              </>
+            )
+          }
+        </div>
+
+        <h1 class="article__title">{title}</h1>
+        {description && <p class="article__desc">{description}</p>}
+
+        {
+          tags.length > 0 && (
+            <div class="tag-row">
+              {tags.map((tag) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+          )
+        }
+      </header>
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      <footer class="article__footer">
+        <a class="back-home" href={withBase('/blog')}>← 返回文章列表</a>
+
+        {
+          (prev || next) && (
+            <nav class="pager" aria-label="上一篇 / 下一篇">
+              {prev ? (
+                <a href={withBase(`/blog/${prev.id}/`)}>
+                  <span class="pager__label">← 上一篇</span>
+                  <span class="pager__title">{prev.data.title}</span>
+                </a>
+              ) : (
+                <span />
+              )}
+              {next ? (
+                <a class="pager__next" href={withBase(`/blog/${next.id}/`)}>
+                  <span class="pager__label">下一篇 →</span>
+                  <span class="pager__title">{next.data.title}</span>
+                </a>
+              ) : (
+                <span />
+              )}
+            </nav>
+          )
+        }
+      </footer>
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config';
+---
+
+<BaseLayout title="关于" description={`关于 ${SITE.title} 和它的作者`}>
+  <section class="page">
+    <div class="container container--narrow">
+      <h1>关于</h1>
+
+      <div class="prose">
+        <p>
+          你好，我是 <strong>{SITE.author}</strong>。这里是我的个人博客，用来记录
+          学习笔记、读书摘录，以及一些还没想清楚就先写下来的东西。
+        </p>
+
+        <p>
+          我相信写作是最好的思考方式：一个念头在脑子里的时候总是模糊的，
+          只有当它被迫变成句子，你才会发现哪里其实没想明白。
+        </p>
+
+        <h2>关于这个站点</h2>
+
+        <p>
+          站点用 <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>
+          搭建，是一个纯静态网站：所有页面在构建时就已经生成好，托管在 GitHub Pages 上，
+          没有数据库、没有后端服务，也就没有需要操心的地方。
+        </p>
+
+        <ul>
+          <li>内容：Markdown 文件，放在 <code>src/content/blog/</code></li>
+          <li>样式：手写 CSS，明暗两套配色</li>
+          <li>部署：推送到 GitHub 后自动构建发布</li>
+        </ul>
+
+        <h2>联系我</h2>
+
+        <p>
+          想聊聊的话，可以发邮件到
+          <a href="mailto:you@example.com">you@example.com</a>，
+          或者在 <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+          上找到我。
+        </p>
+
+        <blockquote>
+          <p>把这段文字换成你真实的自我介绍就好。</p>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

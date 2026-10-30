@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { SITE } from '../config';
+import { withBase } from '../utils';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const latest = posts.slice(0, 5);
+---
+
+<BaseLayout description={SITE.description}>
+  <section class="hero">
+    <div class="container container--narrow">
+      <p class="hero__eyebrow">Something worth keeping</p>
+      <h1>
+        写下来，<br class="br-sm" /><span class="hero__accent">才算真的想过</span>。
+      </h1>
+      <p>{SITE.description}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <div class="section__head">
+        <h2 class="section__title">最近更新</h2>
+        {posts.length > latest.length && (
+          <a class="section__more" href={withBase('/blog')}>全部 {posts.length} 篇</a>
+        )}
+      </div>
+
+      {
+        latest.length > 0 ? (
+          <ul class="post-list">
+            {latest.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </ul>
+        ) : (
+          <div class="empty">
+            <p>还没有文章。在 <code>src/content/blog/</code> 里新建一个 <code>.md</code> 文件就开始写吧。</p>
+          </div>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, readingTime, withBase } from '../utils';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, tags } = post.data;
+const minutes = readingTime(post.body);
+---
+
+<li>
+  <a class="post-item" href={withBase(`/blog/${post.id}/`)}>
+    <div class="post-item__meta">
+      <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+      <span class="dot" aria-hidden="true"></span>
+      <span>{minutes} 分钟</span>
+    </div>
+    <h3 class="post-item__title">{title}</h3>
+    {description && <p class="post-item__desc">{description}</p>}
+    {
+      tags.length > 0 && (
+        <div class="tag-row">
+          {tags.map((tag) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )
+    }
+  </a>
+</li>
