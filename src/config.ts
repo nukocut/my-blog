@@ -3,11 +3,11 @@
  */
 export const SITE = {
   /** 站点名（显示在页头、浏览器标签页、RSS 里） */
-  title: '拾光集',
+  title: '电子葬礼',
   /** 一句话简介 */
-  description: '记录技术、阅读与生活里那些值得留下的东西。',
+  description: '黄粱一梦终须醒，镜花水月总是空。',
   /** 作者署名 */
-  author: '你的名字',
+  author: '水中月',
   /** 语言 */
   lang: 'zh-CN',
   /** 导航栏 */
