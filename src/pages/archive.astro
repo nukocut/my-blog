@@ -21,35 +21,46 @@ const sortedYears = [...years.entries()].sort((a, b) => b[0] - a[0]);
   <section class="page">
     <div class="container container--narrow">
       <h1>归档</h1>
-      <p class="article__desc" style="margin-bottom: 2.5rem">
-        {posts.length} 篇文章，{sortedYears.length} 个年份。
-      </p>
 
       {
-        sortedYears.map(([year, list]) => (
-          <div style="margin-bottom: 2.5rem">
-            <h2 class="section__title" style="margin-bottom: 0.75rem">
-              {year}
-              <span style="font-weight: 400; font-size: 0.8rem; color: var(--text-faint); margin-left: 0.35rem">
-                {list.length} 篇
-              </span>
-            </h2>
-            <ul class="post-list">
-              {list.map((post) => (
-                <li>
-                  <a class="post-item" href={withBase(`/blog/${post.id}/`)}>
-                    <div class="post-item__meta">
-                      <time datetime={post.data.pubDate.toISOString()}>
-                        {formatDate(post.data.pubDate)}
-                      </time>
-                    </div>
-                    <h3 class="post-item__title" style="font-size: 1.05rem">{post.data.title}</h3>
-                  </a>
-                </li>
-              ))}
-            </ul>
+        posts.length === 0 ? (
+          <div class="empty">
+            <p>
+              还没有文章。在 <code>src/content/blog/</code> 里新建一个 <code>.md</code> 文件就开始写吧。
+            </p>
           </div>
-        ))
+        ) : (
+          <>
+            <p class="article__desc" style="margin-bottom: 2.5rem">
+              {posts.length} 篇文章，{sortedYears.length} 个年份。
+            </p>
+
+            {sortedYears.map(([year, list]) => (
+              <div style="margin-bottom: 2.5rem">
+                <h2 class="section__title" style="margin-bottom: 0.75rem">
+                  {year}
+                  <span style="font-weight: 400; font-size: 0.8rem; color: var(--text-faint); margin-left: 0.35rem">
+                    {list.length} 篇
+                  </span>
+                </h2>
+                <ul class="post-list">
+                  {list.map((post) => (
+                    <li>
+                      <a class="post-item" href={withBase(`/blog/${post.id}/`)}>
+                        <div class="post-item__meta">
+                          <time datetime={post.data.pubDate.toISOString()}>
+                            {formatDate(post.data.pubDate)}
+                          </time>
+                        </div>
+                        <h3 class="post-item__title" style="font-size: 1.05rem">{post.data.title}</h3>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </>
+        )
       }
     </div>
   </section>

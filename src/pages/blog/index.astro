@@ -12,13 +12,27 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   <section class="page">
     <div class="container container--narrow">
       <h1>全部文章</h1>
-      <p class="article__desc" style="margin-bottom: 2.5rem">
-        一共 {posts.length} 篇，按时间倒序排列。
-      </p>
 
-      <ul class="post-list">
-        {posts.map((post) => <PostCard post={post} />)}
-      </ul>
+      {
+        posts.length === 0 ? (
+          <div class="empty">
+            <p>
+              还没有文章。在 <code>src/content/blog/</code> 里新建一个 <code>.md</code> 文件就开始写吧。
+            </p>
+          </div>
+        ) : (
+          <>
+            <p class="article__desc" style="margin-bottom: 2.5rem">
+              一共 {posts.length} 篇，按时间倒序排列。
+            </p>
+            <ul class="post-list">
+              {posts.map((post) => (
+                <PostCard post={post} />
+              ))}
+            </ul>
+          </>
+        )
+      }
     </div>
   </section>
 </BaseLayout>
